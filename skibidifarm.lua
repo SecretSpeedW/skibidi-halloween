@@ -58,31 +58,144 @@ if type(getgenv().TTC_Config) == "table" and hasFileApi() then
     pcall(function() writefile(CFGFILE, HttpService:JSONEncode(getgenv().TTC_Config)) end)
 end
 
--- авто-заход на приватную плазу
+-- авто-заход: приватка по ссылке -> проверка, что мы реально на приватной плазе
+local JOINFILE = "skibidi_join.txt"
+
+local function queueNext()
+    if typeof(queue_on_teleport) ~= "function" then return end
+    pcall(queue_on_teleport, string.format([[pcall(function() loadstring(game:HttpGet("%s"))() end)]], LOADER_URL))
+end
+
+local function notify(t, d)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", { Title = t, Text = d or "", Duration = 5 })
+    end)
+end
+
+local function isPrivate()
+    local ok, id = pcall(function() return game.PrivateServerId end)
+    if ok and typeof(id) == "string" and id ~= "" then return true end
+    local ok2, owner = pcall(function() return game.PrivateServerOwnerId end)
+    return ok2 and typeof(owner) == "number" and owner ~= 0
+end
+
+local function readJoin()
+    if hasFileApi() and isfile(JOINFILE) then
+        local ok, raw = pcall(readfile, JOINFILE)
+        if ok and typeof(raw) == "string" then
+            local okj, t = pcall(function() return HttpService:JSONDecode(raw) end)
+            if okj and type(t) == "table" then return t end
+        end
+    end
+    return {}
+end
+
+local function writeJoin(t)
+    if hasFileApi() then pcall(function() writefile(JOINFILE, HttpService:JSONEncode(t)) end) end
+end
+
+-- не больше 2 попыток за 10 минут на один код, чтобы не было петли телепортов
+local function attemptAllowed(code)
+    local st = readJoin()
+    if st.code ~= code or (os.time() - (tonumber(st.t) or 0)) > 600 then
+        st = { code = code, n = 0, t = os.time() }
+    end
+    if (tonumber(st.n) or 0) >= 2 then return false end
+    st.n = (tonumber(st.n) or 0) + 1
+    st.t = os.time()
+    writeJoin(st)
+    return true
+end
+
+local function clearAttempts()
+    if hasFileApi() and isfile(JOINFILE) then pcall(delfile, JOINFILE) end
+end
+
+local function waitLeave(job, secs)
+    local t0 = os.clock()
+    while os.clock() - t0 < (secs or 4) do
+        if game.JobId ~= job then return true end
+        task.wait(0.2)
+    end
+    return game.JobId ~= job
+end
+
+local function doTeleport(fn, secs)
+    local job = game.JobId
+    local failed = false
+    local con
+    pcall(function() con = TeleportService.TeleportInitFailed:Connect(function() failed = true end) end)
+    local ok, err = pcall(fn)
+    if not ok then
+        failed = true
+        if CFG.Debug then print("TTC join err", tostring(err)) end
+        if typeof(err) == "string" and (err:find("from the server", 1, true) or err:find("from a Server", 1, true)) then
+            getgenv().TTC_NoPrivate = true
+        end
+    end
+    local left = waitLeave(job, secs)
+    if con then pcall(function() con:Disconnect() end) end
+    return left and not failed
+end
+
 local function joinPlaza()
     if not CFG.AutoJoinPrivate then return false end
     local link = tostring(CFG.PrivateServerLink or "")
     local pid = tonumber(link:match("games/(%d+)")) or CFG.PlazaPlaceId
     local code = link:match("privateServerLinkCode=([%w%-_]+)") or link:match("[?&]code=([%w%-_]+)")
     if not code and link ~= "" and not link:find("://", 1, true) then code = link:match("^([%w%-_]+)$") end
-    if game.PlaceId == pid then return false end
-    if typeof(queue_on_teleport) == "function" then
-        pcall(queue_on_teleport, string.format([[pcall(function() loadstring(game:HttpGet("%s"))() end)]], LOADER_URL))
-    end
-    task.spawn(function()
-        task.wait(1.5)
-        if code then
-            if not pcall(function() TeleportService:TeleportToPrivateServer(pid, code, { pl }) end) then
-                pcall(function() TeleportService:Teleport(pid, pl) end)
-            end
-        elseif game.PlaceId == CFG.LobbyPlaceId then
-            local r = ReplicatedStorage:FindFirstChild("TeleportToPlaza")
-            if r and r:IsA("RemoteEvent") then r:FireServer() else TeleportService:Teleport(pid, pl) end
-        else
-            TeleportService:Teleport(pid, pl)
+
+    local inPlaza = (game.PlaceId == CFG.PlazaPlaceId)
+    local priv = isPrivate()
+
+    if code then
+        if inPlaza and priv then
+            clearAttempts()
+            return false -- уже на приватной плазе
         end
-    end)
-    return true
+        if not attemptAllowed(code) then
+            notify("Приватка", "Не зашли за 2 попытки, фармлю публичную")
+            return false
+        end
+        if getgenv().TTC_NoPrivate then
+            notify("Приватка", "Экзекутор не даёт зайти на приватку — зайди вручную")
+            return false
+        end
+        queueNext()
+        task.wait(0.6)
+        if inPlaza then
+            notify("Приватка", "Плаза публичная, захожу на приватную")
+            return doTeleport(function()
+                TeleportService:TeleportToPrivateServer(CFG.PlazaPlaceId, code, { pl })
+            end)
+        elseif priv then
+            notify("Приватка", "Уже на приватке, захожу в плазу")
+            local r = ReplicatedStorage:FindFirstChild("TeleportToPlaza")
+            if r and r:IsA("RemoteEvent") then
+                local job = game.JobId
+                pcall(function() r:FireServer() end)
+                return waitLeave(job, 5)
+            end
+            return doTeleport(function() TeleportService:Teleport(CFG.PlazaPlaceId, pl) end)
+        else
+            notify("Приватка", "Захожу на приватный сервер")
+            return doTeleport(function()
+                TeleportService:TeleportToPrivateServer(pid, code, { pl })
+            end)
+        end
+    end
+
+    if inPlaza then return false end
+    queueNext()
+    task.wait(0.6)
+    if game.PlaceId == CFG.LobbyPlaceId then
+        local r = ReplicatedStorage:FindFirstChild("TeleportToPlaza")
+        if r and r:IsA("RemoteEvent") then
+            local job = game.JobId
+            if pcall(function() r:FireServer() end) and waitLeave(job, 5) then return true end
+        end
+    end
+    return doTeleport(function() TeleportService:Teleport(CFG.PlazaPlaceId, pl) end)
 end
 if joinPlaza() then
     getgenv().TTC_Loaded = false
