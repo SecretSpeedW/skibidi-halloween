@@ -598,6 +598,7 @@ end
 
 ---------------------------------------------------------------- afk
 if CFG.AntiAfk then
+    local VIM = game:GetService("VirtualInputManager")
     bind(pl.Idled:Connect(function()
         pcall(function()
             VirtualUser:Button2Down(Vector2.zero, workspace.CurrentCamera.CFrame)
@@ -605,6 +606,17 @@ if CFG.AntiAfk then
             VirtualUser:Button2Up(Vector2.zero, workspace.CurrentCamera.CFrame)
         end)
     end))
+    task.spawn(function()
+        while live() do
+            task.wait(60)
+            if not live() then break end
+            pcall(function()
+                VIM:SendKeyEvent(true, "Space", false, game)
+                task.wait(0.1)
+                VIM:SendKeyEvent(false, "Space", false, game)
+            end)
+        end
+    end)
 end
 
 ---------------------------------------------------------------- main
