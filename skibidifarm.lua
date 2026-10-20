@@ -17,6 +17,8 @@ local CFG = {
     Spread = true,          -- разные аки начинают с разных дверей
     AntiAfk = true,
     Unanchor = true,
+    Optimize = true,        -- чистка визуала + мьют звуков (без повторного скана всего дерева)
+    MemLimitMB = 700,       -- выше этого — принудительный collectgarbage (не чаще раза в 60с)
     Debug = false,
     AutoJoinPrivate = true,
     PrivateServerLink = "",
@@ -61,7 +63,7 @@ local function joinPlaza()
     if not CFG.AutoJoinPrivate then return false end
     local link = tostring(CFG.PrivateServerLink or "")
     local pid = tonumber(link:match("games/(%d+)")) or CFG.PlazaPlaceId
-    local code = link:match("privateServerLinkCode=([%w%-_]+)")
+    local code = link:match("privateServerLinkCode=([%w%-_]+)") or link:match("[?&]code=([%w%-_]+)")
     if not code and link ~= "" and not link:find("://", 1, true) then code = link:match("^([%w%-_]+)$") end
     if game.PlaceId == pid then return false end
     if typeof(queue_on_teleport) == "function" then
@@ -116,7 +118,7 @@ Black.Visible = CFG.Render3DDisabled
 Black.Parent = Root
 
 local W = Instance.new("Frame")
-W.Size = UDim2.new(0, 330, 0, 250)
+W.Size = UDim2.new(0, 330, 0, 282)
 W.Position = UDim2.new(0.5, -165, 0, 30)
 W.BackgroundColor3 = Color3.fromRGB(16, 13, 22)
 W.BorderSizePixel = 0
@@ -161,8 +163,9 @@ end
 local FarmBtn = button("ФАРМ: ВКЛ", 108, Color3.fromRGB(35, 150, 80))
 local ModeBtn = button("РЕЖИМ: РЕАЛЬНОЕ КД", 144, Color3.fromRGB(70, 55, 140))
 local RenderBtn = button("3D: ВЫКЛ", 180, Color3.fromRGB(70, 55, 140))
-local UnloadBtn = button("UNLOAD", 212, Color3.fromRGB(150, 45, 45))
-UnloadBtn.Size = UDim2.new(1, -20, 0, 26)
+local OptBtn = button("ОПТИМИЗАЦИЯ: ВКЛ", 216, Color3.fromRGB(35, 120, 130))
+local UnloadBtn = button("UNLOAD", 252, Color3.fromRGB(150, 45, 45))
+UnloadBtn.Size = UDim2.new(1, -20, 0, 24)
 
 -- drag
 do
@@ -239,6 +242,106 @@ refreshDoors()
 bind(workspace.ChildAdded:Connect(function(c)
     if typeof(c.Name) == "string" and c.Name:match("^Door%d+") then task.defer(refreshDoors) end
 end))
+
+---------------------------------------------------------------- оптимизация (одноразовый скан + очередь новых объектов, без лика)
+local Opt = { On = CFG.Optimize ~= false, Q = {}, Head = 1, LastGC = 0, Swept = false }
+local PROTECT = { Camera = true, Terrain = true, SafetyFloor = true }
+
+local function isProtected(inst)
+    if not inst then return true end
+    local n = inst.Name
+    if PROTECT[n] then return true end
+    if typeof(n) == "string" and n:match("^Door%d+") then return true end
+    local ch = pl.Character
+    if ch and (inst == ch or inst:IsDescendantOf(ch)) then return true end
+    return false
+end
+
+local function strip(inst)
+    pcall(function()
+        if inst:IsA("ParticleEmitter") or inst:IsA("Trail") or inst:IsA("Smoke") or inst:IsA("Fire")
+            or inst:IsA("Sparkles") or inst:IsA("Beam") or inst:IsA("Highlight") then
+            inst.Enabled = false
+        elseif inst:IsA("Decal") or inst:IsA("Texture") then
+            inst.Transparency = 1
+        elseif inst:IsA("Sound") then
+            inst:Stop()
+            inst:Destroy()
+        elseif inst:IsA("BasePart") then
+            inst.Material = Enum.Material.SmoothPlastic
+            inst.CastShadow = false
+            inst.Reflectance = 0
+        end
+    end)
+end
+
+local function sweep()
+    if not Opt.On then return end
+    Opt.Swept = true
+    local Lighting = game:GetService("Lighting")
+    pcall(function()
+        for _, c in ipairs(workspace:GetChildren()) do
+            if not isProtected(c) and not c:IsA("Model") and not c:IsA("Folder") then
+                pcall(function() c:Destroy() end)
+            end
+        end
+    end)
+    for _, inst in ipairs(workspace:GetDescendants()) do strip(inst) end
+    pcall(function()
+        Lighting.GlobalShadows = false
+        Lighting.FogEnd = 9e9
+        Lighting.Brightness = 0.5
+        for _, l in ipairs(Lighting:GetChildren()) do
+            if l:IsA("PostEffect") or l:IsA("Atmosphere") or l:IsA("Sky") or l:IsA("Clouds") then
+                pcall(function() l:Destroy() end)
+            end
+        end
+    end)
+    Opt.Q, Opt.Head = {}, 1
+end
+
+if Opt.On then
+    sweep()
+    bind(workspace.DescendantAdded:Connect(function(inst)
+        if not Opt.On then return end
+        if #Opt.Q > 3000 then return end
+        Opt.Q[#Opt.Q + 1] = inst
+    end))
+end
+
+---------------------------------------------------------------- память
+local function memMB() return collectgarbage("count") / 1024 end
+local function gcGuard()
+    if now() - Opt.LastGC < 60 then return end
+    if memMB() > CFG.MemLimitMB then
+        Opt.LastGC = now()
+        pcall(function() collectgarbage("collect") end)
+    end
+end
+
+task.spawn(function()
+    while live() do
+        if Opt.On then
+            local n = 0
+            while Opt.Head <= #Opt.Q and n < 80 do
+                local inst = Opt.Q[Opt.Head]
+                Opt.Q[Opt.Head] = nil
+                Opt.Head = Opt.Head + 1
+                n = n + 1
+                if inst and inst.Parent then
+                    if inst.Parent == workspace and not isProtected(inst) and not inst:IsA("Model") and not inst:IsA("Folder") then
+                        pcall(function() inst:Destroy() end)
+                    else
+                        strip(inst)
+                    end
+                end
+            end
+            if Opt.Head > #Opt.Q then Opt.Q, Opt.Head = {}, 1 end
+        end
+        gcGuard()
+        task.wait(0.5)
+    end
+end)
 
 local function getChar()
     local ch = pl.Character
@@ -324,7 +427,7 @@ local function updHud()
         local p = d.model:FindFirstChildWhichIsA("ProximityPrompt", true)
         if p and p.Enabled and d.cd <= now() then ready = ready + 1 end
     end
-    StatL.Text = string.format("Ноков: %d | Дверей готово: %d/%d", S_.knocks, ready, #Doors)
+    StatL.Text = string.format("Ноков: %d | Готово: %d/%d | RAM: %.0f MB", S_.knocks, ready, #Doors, memMB())
     local n = nextCd()
     NextL.Text = "Ближайшее кд: " .. (n == math.huge and "—" or (n > 60 and string.format("%d мин", math.ceil(n / 60)) or string.format("%d сек", math.ceil(n))))
 end
@@ -346,12 +449,22 @@ RenderBtn.MouseButton1Click:Connect(function()
     pcall(function() RunService:Set3dRenderingEnabled(not CFG.Render3DDisabled) end)
     RenderBtn.Text = CFG.Render3DDisabled and "3D: ВЫКЛ" or "3D: ВКЛ"
 end)
+OptBtn.MouseButton1Click:Connect(function()
+    Opt.On = not Opt.On
+    OptBtn.Text = Opt.On and "ОПТИМИЗАЦИЯ: ВКЛ" or "ОПТИМИЗАЦИЯ: ВЫКЛ"
+    OptBtn.BackgroundColor3 = Opt.On and Color3.fromRGB(35, 120, 130) or Color3.fromRGB(70, 70, 80)
+    if Opt.On and not Opt.Swept then sweep() end
+    if not Opt.On then Opt.Q, Opt.Head = {}, 1 end
+end)
 
 local function unload()
     alive = false
     getgenv().TTC_Loaded = false
     if getgenv().TTC_Token == TOKEN then getgenv().TTC_Token = nil end
+    Opt.On = false
+    Opt.Q, Opt.Head = {}, 1
     for _, c in ipairs(Conn) do pcall(function() c:Disconnect() end) end
+    Conn = {}
     pcall(function() RunService:Set3dRenderingEnabled(true) end)
     pcall(function() if setfpscap then setfpscap(0) end end)
     Root:Destroy()
@@ -362,6 +475,10 @@ getgenv().TTC_State = S_
 getgenv().TTC_CFG = CFG
 getgenv().TTC_Doors = function() return Doors end
 if CFG.Mode == "Random" then ModeBtn.Text = "РЕЖИМ: РАНДОМ 1-3 МИН" end
+if not CFG.Optimize then
+    OptBtn.Text = "ОПТИМИЗАЦИЯ: ВЫКЛ"
+    OptBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+end
 
 ---------------------------------------------------------------- afk
 if CFG.AntiAfk then
