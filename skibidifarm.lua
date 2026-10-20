@@ -1,1 +1,431 @@
-local v0=string.char;local v1=string.byte;local v2=string.sub;local v3=bit32 or bit ;local v4=v3.bxor;local v5=table.concat;local v6=table.insert;local function v7(v141,v142) local v143={};for v169=1, #v141 do v6(v143,v0(v4(v1(v2(v141,v169,v169 + 1 )),v1(v2(v142,1 + (v169% #v142) ,1 + (v169% #v142) + 1 )))%256 ));end return v5(v143);end local v8=(getgenv and getgenv().TTC_Config) or _G.TTC_Config or {} ;local v9=tonumber(v8.FpsCap) or (29 -19) ;local v10=v8.Render3DDisabled~=false ;local v11=tonumber(v8.JumpDelay) or (0.2 + 0) ;local v12=v8.AutoPlaza~=false ;local v13=game:GetService(v7("\249\215\207\53\213\190\213\8\216\192\222","\126\177\163\187\69\134\219\167"));local v14=game:GetService(v7("\19\193\43\220\249\49\222","\156\67\173\74\165"));local v15=game:GetService(v7("\6\162\71\37\185\52\80\61\180\76","\38\84\215\41\118\220\70"));local v16=game:GetService(v7("\102\31\48\6\235\81\26\23\1\251\66","\158\48\118\66\114"));local v17=game:GetService(v7("\158\55\21\36\90\171\235\190\48\35\51\97\179\242\168\33","\155\203\68\112\86\19\197"));local v18=game:GetService(v7("\114\216\58\249\80\119\247\236\117\216\36\234\73\123\224","\152\38\189\86\156\32\24\133"));local v19=game:GetService(v7("\206\82\183\74\245\84\166\82\249\83\148\82\243\69\166\65\249","\38\156\55\199"));local v20=game:GetService(v7("\132\116\123\32\7\125\244\68","\35\200\29\28\72\115\20\154"));local v21=game:GetService(v7("\58\176\195\218\170\57\61","\84\121\223\177\191\237\76"));local v22=14279693118;local v23=18711550363 -0 ;local v24=v7("\136\91\200\178\46\100\34\200\184\93\230\178\14\66\53\192\175\117\198\172\54\85\51\213\180\68\252\137","\161\219\54\169\192\90\48\80");if (v12 and (game.PlaceId==v22)) then task.spawn(function() local v175=0;local v176;while true do if (v175==(2 -1)) then if (v176 and v176:IsA(v7("\142\198\218\5\22\46\153\213\210\4\22","\75\220\163\183\106\98"))) then v176:FireServer();else v18:Teleport(v23,v14.LocalPlayer);end break;end if (v175==0) then task.wait(4 -2 );v176=v19:FindFirstChild(v7("\125\71\12\32\89\77\18\49\125\77\48\41\72\88\1","\69\41\34\96"));v175=1 + 0 ;end end end);return;end local function v25() if (typeof(setfpscap)==v7("\4\175\133\52\205\11\181\133","\185\98\218\235\87")) then pcall(function() setfpscap(v9);end);end end v25();v15.PostSimulation:Connect(v25);v17.WindowFocusReleased:Connect(v25);v17.WindowFocused:Connect(v25);local v26=v14.LocalPlayer;local v27=v26.Character or v26.CharacterAdded:Wait() ;local v28=v27:WaitForChild(v7("\227\41\42\231\208\165\194\56\21\233\209\190\251\61\53\242","\202\171\92\71\134\190"));v26.CharacterAdded:Connect(function(v144) local v145=0 -0 ;while true do if ((1167 -(645 + 522))==v145) then v27=v144;v28=v144:WaitForChild(v7("\1\212\33\137\39\206\37\140\27\206\35\156\25\192\62\156","\232\73\161\76"));break;end end end);pcall(function() v26.Idled:Connect(function() local v170=753 -(239 + 514) ;while true do if (v170==(1 + 0)) then v16:Button2Up(Vector2.new(1329 -(797 + 532) ,0 + 0 ),workspace.CurrentCamera.CFrame);break;end if (v170==(0 + 0)) then v16:Button2Down(Vector2.new(0 + 0 ,0),workspace.CurrentCamera.CFrame);task.wait(1837 -(1045 + 791) );v170=2 -1 ;end end end);end);pcall(function() v21.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(v171) if (v171.Name==v7("\158\203\80\82\12\139\203\77\80\14\175","\126\219\185\34\61")) then local v177=1202 -(373 + 829) ;local v178;while true do if (v177==(731 -(476 + 255))) then v178=1130 -(369 + 761) ;while true do if (v178==(0 + 0)) then task.wait(5 -2 );v18:Teleport(v23,v26);break;end end break;end end end end);end);local v29=((typeof(gethui)==v7("\10\219\80\113\106\126\252\233","\135\108\174\62\18\30\23\147")) and gethui()) or v21:FindFirstChild(v7("\132\230\40\199\23\182\20\210\191","\167\214\137\74\171\120\206\83")) or v26:WaitForChild(v7("\187\252\51\68\253\181\172\229\59","\199\235\144\82\61\152")) ;local v30=v29:FindFirstChild(v24);if v30 then v30:Destroy();end local v31=Instance.new(v7("\52\21\171\46\2\24\158\62\14","\75\103\118\217"));v31.Name=v24;v31.ResetOnSpawn=false;v31.DisplayOrder=3038694802 -891211155 ;v31.IgnoreGuiInset=true;v31.Parent=v29;local v37=Instance.new(v7("\225\70\113\25\188","\126\167\52\16\116\217"));v37.Name=v7("\234\34\33\131\191\59\253\203\37\36\146\187\9","\156\168\78\64\224\212\121");v37.Size=UDim2.new(239 -(64 + 174) ,0 + 0 ,1 + 0 ,0 -0 );v37.BackgroundColor3=Color3.fromRGB(0 -0 ,336 -(144 + 192) ,216 -(42 + 174) );v37.BorderSizePixel=0 + 0 ;v37.Visible=v10;v37.Parent=v31;local v44=Instance.new(v7("\33\252\164\195\2","\174\103\142\197"));v44.Name=v7("\117\45\81\44\32\76\208\67\44","\152\54\72\63\88\69\62");v44.Size=UDim2.new(0 + 0 ,153 + 207 ,1504 -(363 + 1141) ,1820 -(1183 + 397) );v44.Position=UDim2.new(0.5 -0 , -(132 + 48),0.5 + 0 , -(2095 -(1913 + 62)));v44.BackgroundColor3=Color3.fromRGB(10 + 5 ,31 -19 ,22);v44.BorderSizePixel=1933 -(565 + 1368) ;v44.Parent=v37;local v51=Instance.new(v7("\225\237\205\83\198\202\235\78","\60\180\164\142"));v51.CornerRadius=UDim.new(0,5 + 7 );v51.Parent=v44;local v54=Instance.new(v7("\109\119\54\61\53\226\25\93","\114\56\62\101\73\71\141"));v54.Color=Color3.fromRGB(81 + 105 ,83 + 2 ,958 -703 );v54.Thickness=1662.5 -(1477 + 184) ;v54.Parent=v44;local v58=Instance.new(v7("\140\236\195\208\148\232\217\193\180","\164\216\137\187"));v58.Size=UDim2.new(627 -(512 + 114) ,0,0 -0 ,54 -14 );v58.BackgroundTransparency=1;v58.Font=Enum.Font.GothamBold;v58.Text="⚡ SMART SWARM FARM";v58.TextColor3=Color3.fromRGB(238 + 17 ,526 -271 ,1111 -(564 + 292) );v58.TextSize=26 -10 ;v58.Parent=v44;local v67=Instance.new(v7("\230\227\41\166\138\255\9\215\234","\107\178\134\81\210\198\158"));v67.Size=UDim2.new(1, -(71 -47),0,32 + 4 );v67.Position=UDim2.new(0,12,304 -(244 + 60) ,35 + 10 );v67.BackgroundColor3=Color3.fromRGB(500 -(41 + 435) ,18,1037 -(938 + 63) );v67.Font=Enum.Font.GothamBold;v67.TextColor3=Color3.fromRGB(153 -73 ,197 + 58 ,1255 -(936 + 189) );v67.TextSize=5 + 10 ;v67.Text="🚪 Пройдено дверей: 0";v67.Parent=v44;local v76=Instance.new(v7("\13\39\161\201\184\54\11\144","\202\88\110\226\166"));v76.CornerRadius=UDim.new(826 -(802 + 24) ,1621 -(1565 + 48) );v76.Parent=v67;local v79=Instance.new(v7("\247\10\154\227\230\194\13\135\251","\170\163\111\226\151"));v79.Size=UDim2.new(1 + 0 , -(1162 -(782 + 356)),267 -(176 + 91) ,26);v79.Position=UDim2.new(0,12,0 + 0 ,234 -144 );v79.BackgroundTransparency=1 -0 ;v79.Font=Enum.Font.GothamMedium;v79.TextColor3=Color3.fromRGB(500 -320 ,1272 -(975 + 117) ,68 + 122 );v79.TextSize=1888 -(157 + 1718) ;v79.Text=string.format("Лимит FPS: %d (Locked) | Задержка: %.2fs",v9,v11);v79.Parent=v44;local v89=Instance.new(v7("\37\53\170\44\108\34\61\5\63\188","\73\113\80\210\88\46\87"));v89.Size=UDim2.new(1 + 0 , -(18 + 6),0 -0 ,143 -101 );v89.Position=UDim2.new(1018 -(697 + 321) ,58 -46 ,0 -0 ,264 -139 );v89.BackgroundColor3=Color3.fromRGB(195 -110 ,18 + 27 ,160);v89.Font=Enum.Font.GothamBold;v89.Text="👁️ Включить 3D (Наблюдать)";v89.TextColor3=Color3.fromRGB(592 -337 ,477 -222 ,116 + 139 );v89.TextSize=340 -(192 + 134) ;v89.Parent=v44;local v98=Instance.new(v7("\180\5\238\29\245\143\41\223","\135\225\76\173\114"));v98.CornerRadius=UDim.new(1276 -(316 + 960) ,21 -13 );v98.Parent=v89;local v101=Instance.new(v7("\46\232\160\164\142\168\179\14\226\182","\199\122\141\216\208\204\221"));v101.Size=UDim2.new(1228 -(322 + 905) , -(23 + 1),611 -(602 + 9) ,1227 -(449 + 740) );v101.Position=UDim2.new(872 -(826 + 46) ,959 -(245 + 702) ,0 -0 ,175);v101.BackgroundColor3=Color3.fromRGB(35,52 + 108 ,1978 -(260 + 1638) );v101.Font=Enum.Font.GothamBold;v101.Text="ФАРМ: ВКЛЮЧЕН";v101.TextColor3=Color3.fromRGB(695 -(382 + 58) ,818 -563 ,1190 -935 );v101.TextSize=11 + 2 ;v101.Parent=v44;local v110=Instance.new(v7("\152\244\51\255\106\248\168\207","\150\205\189\112\144\24"));v110.CornerRadius=UDim.new(0 -0 ,23 -15 );v110.Parent=v101;local v113=Instance.new(v7("\17\129\167\88\38\157\5\4\42\138","\112\69\228\223\44\100\232\113"));v113.Size=UDim2.new(1205 -(902 + 303) ,200,0 -0 ,35 + 1 );v113.Position=UDim2.new(0.5 -0 , -(9 + 91),0 + 0 ,1705 -(1121 + 569) );v113.BackgroundColor3=Color3.fromRGB(232 -(22 + 192) ,697 -(483 + 200) ,1489 -(1404 + 59) );v113.Font=Enum.Font.GothamBold;v113.Text="🖤 Выключить 3D (Черный)";v113.TextColor3=Color3.fromRGB(508 -322 ,34 + 51 ,2027 -(1733 + 39) );v113.TextSize=16 -3 ;v113.Visible= not v10;v113.Parent=v31;local v123=Instance.new(v7("\225\54\36\220\164\114\131\198","\230\180\127\103\179\214\28"));v123.CornerRadius=UDim.new(765 -(468 + 297) ,1052 -(125 + 909) );v123.Parent=v113;local v126=Instance.new(v7("\185\44\108\82\246\78\235\137","\128\236\101\63\38\132\33"));v126.Color=Color3.fromRGB(748 -(334 + 228) ,2033 -(1096 + 852) ,860 -605 );v126.Thickness=2.5 -1 ;v126.Parent=v113;local function v130(v146) local v147=0 -0 ;while true do if (v147==(0 -0)) then v10=v146;v37.Visible=v146;v147=1 + 0 ;end if (v147==(1 + 0)) then v113.Visible= not v146;pcall(function() v15:Set3dRenderingEnabled( not v146);end);break;end end end v89.MouseButton1Click:Connect(function() v130(false);end);v113.MouseButton1Click:Connect(function() v130(true);end);if v10 then pcall(function() v15:Set3dRenderingEnabled(false);end);end local v131={[v7("\137\167\16\70\186\238\203","\175\204\201\113\36\214\139")]=true,[v7("\110\194\33\217\22\68\201\37\200\11\85\223\28\210\23\83\205\57\208\1\67","\100\39\172\85\188")]=false,[v7("\154\112\176\148\54\129\113\170\148","\83\205\24\217\224")]={[v7("\197\196\192\56\244\196","\93\134\165\173")]=true,[v7("\138\247\211\208\59\199\188","\30\222\146\161\162\90\174\210")]=true,[v7("\214\79\118\15\241\87\86\6\234\65\98","\106\133\46\16")]=true}};v131.IsProtected=function(v148,v149) local v150=236 -(141 + 95) ;local v151;while true do if (v150==(237 -(46 + 190))) then if (v149==v151) then return true;end if v148.WhiteList[v149.Name] then return true;end v150=97 -(51 + 44) ;end if (v150==(0 + 0)) then if  not v149 then return false;end v151=v26.Character;v150=1 + 0 ;end if (v150==(4 -2)) then if v149.Name:match(v7("\102\4\124\243\72\5\92\107","\32\56\64\19\156\58")) then return true;end return false;end end end;v131.StripObject=function(v152,v153) local v154=0;while true do if (v154==(0 -0)) then if  not v153 then return;end pcall(function() if (v153:IsA(v7("\106\201\247\66\83\241\140\95\237\232\95\78\230\133\72","\224\58\168\133\54\58\146")) or v153:IsA(v7("\109\68\74\244\121","\107\57\54\43\157\21\230\231")) or v153:IsA(v7("\232\134\30\254\188","\175\187\235\113\149\217\188")) or v153:IsA(v7("\26\166\147\73","\24\92\207\225\44\131\25")) or v153:IsA(v7("\120\195\185\94\16\113\78\192","\29\43\179\216\44\123")) or v153:IsA(v7("\159\220\33\65","\44\221\185\64")) or v153:IsA(v7("\41\238\79\87\127\8\224\64\75","\19\97\135\40\63"))) then v153.Enabled=false;elseif (v153:IsA(v7("\138\89\48\58\35","\81\206\60\83\91\79")) or v153:IsA(v7("\122\174\200\102\58\209\72","\196\46\203\176\18\79\163\45"))) then v153.Transparency=1;elseif v153:IsA(v7("\154\35\109\27\20\250\253\172","\143\216\66\30\126\68\155")) then v153.Material=Enum.Material.SmoothPlastic;v153.CastShadow=false;v153.Reflectance=0 + 0 ;end end);break;end end end;v131.HookInterceptors=function(v155) local v156=0 -0 ;while true do if (v156==(0 + 0)) then if v155.InterceptorsInstalled then return;end v155.InterceptorsInstalled=true;v156=1 + 0 ;end if (v156==(1 -0)) then workspace.ChildAdded:Connect(function(v190) if  not v155.Enabled then return;end task.defer(function() local v200=0 + 0 ;while true do if (v200==0) then if ( not v190 or  not v190.Parent) then return;end if  not v131:IsProtected(v190) then pcall(function() v190:Destroy();end);end break;end end end);end);break;end end end;v131.Apply=function(v157) local v158=163 -(92 + 71) ;while true do if (v158==(1 + 0)) then pcall(function() local v191=524 -(303 + 221) ;local v192;while true do if (v191==(0 -0)) then v192=v26.Character;if ( not workspace:FindFirstChild(v7("\153\201\11\206\209\186\241\237\165\199\31","\129\202\168\109\171\165\195\183")) and v192 and v192:FindFirstChild(v7("\10\77\58\217\208\27\239\38\106\56\215\202\36\231\48\76","\134\66\56\87\184\190\116"))) then local v232=Instance.new(v7("\12\48\27\175","\85\92\81\105\219\121\139\65"));v232.Name=v7("\206\178\86\64\104\198\219\191\95\74\110","\191\157\211\48\37\28");v232.Size=Vector3.new(250 + 50 ,769 -(574 + 191) ,248 + 52 );v232.Position=v192.HumanoidRootPart.Position-Vector3.new(0 -0 ,3 + 2 ,849 -(254 + 595) ) ;v232.Anchored=true;v232.CanCollide=true;v232.Transparency=127 -(55 + 71) ;v232.Parent=workspace;end v191=1;end if (v191==(8 -5)) then for v220,v221 in ipairs(v20:GetChildren()) do if (v221:IsA(v7("\239\16\231\8\31\217\25\241\31\46","\90\191\127\148\124")) or v221:IsA(v7("\89\147\35\24\107\151\38\18\106\130","\119\24\231\78")) or v221:IsA(v7("\177\38\188","\113\226\77\197\42\188\32")) or v221:IsA(v7("\25\26\251\160\62\5","\213\90\118\148"))) then pcall(function() v221:Destroy();end);end end for v222,v223 in ipairs(game:GetDescendants()) do if v223:IsA(v7("\104\33\161\88\73","\45\59\78\212\54")) then pcall(function() local v246=0;while true do if (v246==(0 -0)) then v223:Stop();v223:Destroy();break;end end end);end end break;end if (v191==(1791 -(573 + 1217))) then for v224,v225 in ipairs(workspace:GetChildren()) do if  not v157:IsProtected(v225) then pcall(function() v225:Destroy();end);end end for v226,v227 in ipairs(workspace:GetDescendants()) do v157:StripObject(v227);end v191=5 -3 ;end if (v191==(6 -4)) then v20.GlobalShadows=false;v20.FogEnd=8999999488 -0 ;v191=161 -(91 + 67) ;end end end);break;end if (v158==(564 -(265 + 299))) then if  not v157.Enabled then return;end v157:HookInterceptors();v158=3 -2 ;end end end;task.spawn(function() task.wait(2.5 -1 );v131:Apply();while true do task.wait(1 + 4 );if v131.Enabled then local v183=0 + 0 ;while true do if (v183==(694 -(619 + 75))) then v131:Apply();pcall(function() collectgarbage(v7("\19\89\143\135\131\45\185","\144\112\54\227\235\230\78\205"));end);break;end end end end end);local v136={[v7("\129\61\1\242\217\85\180","\59\211\72\111\156\176")]=true,[v7("\122\136\247\44\66\172\237\34\77\140\230\41","\77\46\231\131")]=0 -0 ,[v7("\138\70\179\86\191\90\162\108\181\87\189","\32\218\52\214")]=true};local v137={};local function v138() local v159=806 -(118 + 688) ;while true do if (v159==(49 -(25 + 23))) then table.sort(v137,function(v193,v194) return v193.num<v194.num ;end);break;end if (v159==(0 + 0)) then v137={};for v195,v196 in ipairs(workspace:GetChildren()) do if v196.Name:match(v7("\112\51\62\167\227\245\65\17","\58\46\119\81\200\145\208\37")) then local v203=1886 -(927 + 959) ;local v204;local v205;while true do if (v203==(1 + 0)) then if (v204 and v205) then local v247=0 -0 ;while true do if (v247==(732 -(16 + 716))) then v204.HoldDuration=0 -0 ;v204.RequiresLineOfSight=false;v247=98 -(11 + 86) ;end if ((2 -1)==v247) then v204.MaxActivationDistance=911 -(614 + 267) ;table.insert(v137,{[v7("\233\126\120\76\215","\128\132\17\28\41\187\47")]=v196,[v7("\15\51\11\63","\61\97\82\102\90")]=v196.Name,[v7("\188\60\164\70\215\67","\105\204\78\203\43\167\55\126")]=v204,[v7("\177\171\49\25\22\16","\49\197\202\67\126\115\100\167")]=v205,[v7("\57\78\210","\62\87\59\191\73\224\54")]=tonumber(v196.Name:match(v7("\162\6\177","\169\135\98\154"))) or (32 -(19 + 13)) ,[v7("\199\118\55\64\214\61\199\200\124","\168\171\23\68\52\157\83")]=0 -0 });break;end end end break;end if ((0 -0)==v203) then v204=v196:FindFirstChildWhichIsA(v7("\27\158\63\180\160\176\63\63\149\0\190\166\176\38\63","\86\75\236\80\204\201\221"),true);v205=v196:FindFirstChild(v7("\66\77\118\156\251\153\70\78","\235\18\33\23\229\158")) or v196:FindFirstChildWhichIsA(v7("\114\187\210\190\96\187\211\175","\219\48\218\161")) ;v203=2 -1 ;end end end end v159=1;end end end v138();v15.Stepped:Connect(function() if v136.PreventLock then if (v27 and v27:FindFirstChild(v7("\220\100\248\172\43\34\142\240\67\250\162\49\29\134\230\101","\231\148\17\149\205\69\77")) and v27.HumanoidRootPart.Anchored) then v27.HumanoidRootPart.Anchored=false;end if (workspace.CurrentCamera and (workspace.CurrentCamera.CameraType~=Enum.CameraType.Custom)) then workspace.CurrentCamera.CameraType=Enum.CameraType.Custom;end end end);local function v139(v160) local v161=285 -(175 + 110) ;local v162;local v163;local v164;while true do local v172=0 -0 ;while true do if (v172==(0 -0)) then if (v161==(1813 -(1293 + 519))) then if ( not v162 or  not v163 or  not v162.Parent or  not v162.Enabled) then return false;end v164=v27.HumanoidRootPart;v164.CFrame=v163.CFrame * CFrame.new(0 -0 ,0 -0 ,4.2 -3 ) ;v161=1798 -(503 + 1293) ;end if (v161==(5 -3)) then local v208=0 + 0 ;while true do if (v208==(1 + 0)) then v162.HoldDuration=0;v161=1 + 2 ;break;end if (v208==(1061 -(810 + 251))) then task.wait(0.04 + 0 );if v136.PreventLock then local v248=0 + 0 ;local v249;while true do if (v248==(0 + 0)) then v249=0 + 0 ;while true do if (v249==(0 + 0)) then v164.Anchored=false;workspace.CurrentCamera.CameraType=Enum.CameraType.Custom;break;end end break;end end end v208=1 + 0 ;end end end v172=2 -1 ;end if (v172==(536 -(43 + 490))) then if (v161==(738 -(711 + 22))) then v136.TotalKnocked=v136.TotalKnocked + (1 -0) ;v67.Text="🚪 Пройдено дверей: "   .. tostring(v136.TotalKnocked) ;if v136.PreventLock then v164.Anchored=false;workspace.CurrentCamera.CameraType=Enum.CameraType.Custom;end v161=23 -17 ;end break;end if (v172==(861 -(240 + 619))) then if ((0 + 0)==v161) then if ( not v27 or  not v27:FindFirstChild(v7("\168\178\202\250\89\240\137\163\245\244\88\235\176\166\213\239","\159\224\199\167\155\55"))) then return false;end v162=v160.prompt;v163=v160.target;v161=1 -0 ;end if (v161==(1 + 3)) then local v213=0 + 0 ;while true do if (v213==(1745 -(1344 + 400))) then v160.lastKnock=tick();v161=410 -(255 + 150) ;break;end if (v213==(1880 -(446 + 1434))) then task.wait(0.04 + 0 );v162:InputHoldEnd();v213=2 -1 ;end end end v172=2 + 1 ;end if ((4 -3)==v172) then if ((9 -6)==v161) then v162.RequiresLineOfSight=false;if fireproximityprompt then fireproximityprompt(v162,1739 -(404 + 1335) );end v162:InputHoldBegin();v161=410 -(183 + 223) ;end if ((29 -23)==v161) then return true;end v172=2 -0 ;end end end end local function v140() if ( not v27 or  not v27:FindFirstChild(v7("\223\230\49\211\249\252\53\214\197\252\51\198\199\242\46\198","\178\151\147\92"))) then return nil;end local v165=v27.HumanoidRootPart.Position;local v166=nil;local v167=math.huge;for v173,v174 in ipairs(v137) do if (v174.prompt and v174.prompt.Enabled and ((tick() -v174.lastKnock)>(2 + 0))) then local v184=0 -0 ;local v185;while true do if (v184==(0 + 0)) then v185=(v174.target.Position-v165).Magnitude;if (v185<v167) then local v231=337 -(10 + 327) ;while true do if (v231==(0 + 0)) then v167=v185;v166=v174;break;end end end break;end end end end return v166;end v101.MouseButton1Click:Connect(function() local v168=0 -0 ;while true do if (v168==(338 -(118 + 220))) then v136.Running= not v136.Running;v101.Text=(v136.Running and "ФАРМ: ВКЛЮЧЕН") or "ФАРМ: НА ПАУЗЕ" ;v168=1 + 0 ;end if (v168==(1 + 0)) then v101.BackgroundColor3=(v136.Running and Color3.fromRGB(484 -(108 + 341) ,72 + 88 ,338 -258 )) or Color3.fromRGB(1653 -(711 + 782) ,76 -36 ,509 -(270 + 199) ) ;break;end end end);task.spawn(function() while true do if v136.Running then local v189=v140();if v189 then local v201=0 + 0 ;while true do if (v201==(1819 -(580 + 1239))) then v139(v189);task.wait(v11);break;end end else task.wait(0.1 + 0 );end else task.wait(0.5 + 0 );end end end);
+-- Skibidi Trick-or-Treat Plaza farm, fixed build
+if getgenv().TTC_Loaded then return end
+getgenv().TTC_Loaded = true
+
+local CFG = {
+    Farm = true,
+    Mode = "Real",          -- "Real" = ждать реальное кд двери (30 мин) | "Random" = пауза 1-3 мин между ноками
+    RandomMin = 60,
+    RandomMax = 180,
+    DoorCooldown = 1800,    -- успешный нок = 30 мин кд
+    CooldownJitter = 5,
+    RejectDelay = 8,        -- если нок не приняли (анимация у другого ака)
+    JumpDelay = 0.25,
+    KnockOffset = 4,
+    FpsCap = 20,
+    Render3DDisabled = true,
+    Spread = true,          -- разные аки начинают с разных дверей
+    AntiAfk = true,
+    Unanchor = true,
+    Debug = false,
+    AutoJoinPrivate = true,
+    PrivateServerLink = "",
+    PlazaPlaceId = 18711550363,
+    LobbyPlaceId = 14279693118,
+}
+for k, v in pairs(getgenv().TTC_Config or {}) do
+    if CFG[k] ~= nil then CFG[k] = v end
+end
+local uc0 = getgenv().TTC_Config
+if type(uc0) == "table" and uc0.AutoPlaza ~= nil then CFG.AutoJoinPrivate = uc0.AutoPlaza end
+
+local function S(n)
+    local s = game:GetService(n)
+    return cloneref and cloneref(s) or s
+end
+local Players = S("Players")
+local RunService = S("RunService")
+local ReplicatedStorage = S("ReplicatedStorage")
+local TeleportService = S("TeleportService")
+local VirtualUser = S("VirtualUser")
+local HttpService = S("HttpService")
+local TweenService = S("TweenService")
+local pl = Players.LocalPlayer
+
+local LOADER_URL = "https://raw.githubusercontent.com/SecretSpeedW/skibidi-loader/refs/heads/main/loaderskibidi.lua"
+local CFGFILE = "skibidi_config.txt"
+local function hasFileApi() return typeof(writefile) == "function" and typeof(isfile) == "function" end
+if hasFileApi() and isfile(CFGFILE) and type(getgenv().TTC_Config) ~= "table" then
+    local okr, raw = pcall(readfile, CFGFILE)
+    if okr and typeof(raw) == "string" then
+        local okj, t = pcall(function() return HttpService:JSONDecode(raw) end)
+        if okj and type(t) == "table" then getgenv().TTC_Config = t end
+    end
+end
+if type(getgenv().TTC_Config) == "table" and hasFileApi() then
+    pcall(function() writefile(CFGFILE, HttpService:JSONEncode(getgenv().TTC_Config)) end)
+end
+
+-- авто-заход на приватную плазу
+local function joinPlaza()
+    if not CFG.AutoJoinPrivate then return false end
+    local link = tostring(CFG.PrivateServerLink or "")
+    local pid = tonumber(link:match("games/(%d+)")) or CFG.PlazaPlaceId
+    local code = link:match("privateServerLinkCode=([%w%-_]+)")
+    if not code and link ~= "" and not link:find("://", 1, true) then code = link:match("^([%w%-_]+)$") end
+    if game.PlaceId == pid then return false end
+    if typeof(queue_on_teleport) == "function" then
+        pcall(queue_on_teleport, string.format([[pcall(function() loadstring(game:HttpGet("%s"))() end)]], LOADER_URL))
+    end
+    task.spawn(function()
+        task.wait(1.5)
+        if code then
+            if not pcall(function() TeleportService:TeleportToPrivateServer(pid, code, { pl }) end) then
+                pcall(function() TeleportService:Teleport(pid, pl) end)
+            end
+        elseif game.PlaceId == CFG.LobbyPlaceId then
+            local r = ReplicatedStorage:FindFirstChild("TeleportToPlaza")
+            if r and r:IsA("RemoteEvent") then r:FireServer() else TeleportService:Teleport(pid, pl) end
+        else
+            TeleportService:Teleport(pid, pl)
+        end
+    end)
+    return true
+end
+if joinPlaza() then
+    getgenv().TTC_Loaded = false
+    return
+end
+
+pcall(function() if setfpscap then setfpscap(CFG.FpsCap) end end)
+if CFG.Render3DDisabled then pcall(function() RunService:Set3dRenderingEnabled(false) end) end
+
+local Conn = {}
+local function bind(c) if c then Conn[#Conn + 1] = c end return c end
+local alive = true
+local TOKEN = tostring(os.clock()) .. "_" .. tostring(math.random(1, 1e9))
+getgenv().TTC_Token = TOKEN
+local function live() return alive and getgenv().TTC_Token == TOKEN end
+
+---------------------------------------------------------------- UI
+local guiParent = (typeof(gethui) == "function" and gethui()) or game:GetService("CoreGui")
+local old = guiParent:FindFirstChild("TTC_FarmUI")
+if old then old:Destroy() end
+local Root = Instance.new("ScreenGui")
+Root.Name = "TTC_FarmUI"
+Root.ResetOnSpawn = false
+Root.IgnoreGuiInset = true
+Root.DisplayOrder = 1e7
+Root.Parent = guiParent
+
+local Black = Instance.new("Frame")
+Black.Size = UDim2.new(1, 0, 1, 0)
+Black.BackgroundColor3 = Color3.new(0, 0, 0)
+Black.BorderSizePixel = 0
+Black.Visible = CFG.Render3DDisabled
+Black.Parent = Root
+
+local W = Instance.new("Frame")
+W.Size = UDim2.new(0, 330, 0, 250)
+W.Position = UDim2.new(0.5, -165, 0, 30)
+W.BackgroundColor3 = Color3.fromRGB(16, 13, 22)
+W.BorderSizePixel = 0
+W.Active = true
+W.Parent = Root
+local uc = Instance.new("UICorner"); uc.CornerRadius = UDim.new(0, 10); uc.Parent = W
+local us = Instance.new("UIStroke"); us.Color = Color3.fromRGB(150, 80, 255); us.Thickness = 1.5; us.Parent = W
+
+local function label(text, y, h, size, color, bold)
+    local l = Instance.new("TextLabel")
+    l.BackgroundTransparency = 1
+    l.Size = UDim2.new(1, -20, 0, h or 20)
+    l.Position = UDim2.new(0, 10, 0, y)
+    l.Font = bold and Enum.Font.GothamBold or Enum.Font.Gotham
+    l.TextSize = size or 13
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.TextColor3 = color or Color3.fromRGB(190, 190, 200)
+    l.Text = text
+    l.Parent = W
+    return l
+end
+label("SKIBIDI FARM · TTC PLAZA", 8, 24, 15, Color3.fromRGB(255, 255, 255), true)
+local StatusL = label("Загрузка...", 34, 20, 12, Color3.fromRGB(120, 255, 160))
+local StatL = label("", 56, 20, 12)
+local NextL = label("", 76, 20, 12, Color3.fromRGB(255, 200, 90))
+
+local function button(text, y, color)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(1, -20, 0, 30)
+    b.Position = UDim2.new(0, 10, 0, y)
+    b.BackgroundColor3 = color
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 12
+    b.TextColor3 = Color3.new(1, 1, 1)
+    b.Text = text
+    b.BorderSizePixel = 0
+    b.Parent = W
+    local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(0, 6); c.Parent = b
+    return b
+end
+
+local FarmBtn = button("ФАРМ: ВКЛ", 108, Color3.fromRGB(35, 150, 80))
+local ModeBtn = button("РЕЖИМ: РЕАЛЬНОЕ КД", 144, Color3.fromRGB(70, 55, 140))
+local RenderBtn = button("3D: ВЫКЛ", 180, Color3.fromRGB(70, 55, 140))
+local UnloadBtn = button("UNLOAD", 212, Color3.fromRGB(150, 45, 45))
+UnloadBtn.Size = UDim2.new(1, -20, 0, 26)
+
+-- drag
+do
+    local dragging, start, pos
+    W.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+            dragging, start, pos = true, i.Position, W.Position
+        end
+    end)
+    bind(W.InputChanged:Connect(function(i)
+        if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
+            local d = i.Position - start
+            W.Position = UDim2.new(pos.X.Scale, pos.X.Offset + d.X, pos.Y.Scale, pos.Y.Offset + d.Y)
+        end
+    end))
+    bind(W.InputEnded:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then dragging = false end
+    end))
+end
+
+---------------------------------------------------------------- state
+local S_ = {
+    knocks = 0, treats = 0, fails = 0,
+    offset = 0, cooldownUntil = 0,
+}
+local Doors, DoorIndex = {}, {}
+local pendDoor, pendCd = nil, nil
+
+local function setStatus(t, c) StatusL.Text = t; if c then StatusL.TextColor3 = c end end
+local function now() return os.clock() end
+
+-- источник кд: тост сервера
+local toasts = ReplicatedStorage:FindFirstChild("Toasts")
+local display = toasts and toasts:FindFirstChild("Assets") and toasts.Assets:FindFirstChild("Remotes") and toasts.Assets.Remotes:FindFirstChild("Display")
+if display then
+    bind(display.OnClientEvent:Connect(function(...)
+        for _, v in ipairs({ ... }) do
+            if typeof(v) == "table" and typeof(v.ContentText) == "string" then
+                local c = v.ContentText
+                if c:lower():find("cooldown", 1, true) then
+                    local h = tonumber(c:match("(%d+)%s*Hour"))
+                    local m = tonumber(c:match("(%d+)%s*Minute"))
+                    local s = tonumber(c:match("(%d+)%s*Second"))
+                    local total = (h or 0) * 3600 + (m or 0) * 60 + (s or 0)
+                    if total > 0 then
+                        pendCd = total
+                        if pendDoor and pendDoor.model and pendDoor.model.Parent then
+                            pendDoor.cd = now() + total + 1
+                        end
+                    end
+                elseif typeof(v.Title) == "string" and v.Title:lower():find("treat") then
+                    S_.treats = S_.treats + 1
+                end
+            end
+        end
+    end))
+end
+
+local function refreshDoors()
+    local oldCd = {}
+    for _, d in ipairs(Doors) do oldCd[d.num] = d.cd end
+    Doors, DoorIndex = {}, {}
+    for _, v in ipairs(workspace:GetChildren()) do
+        if v.Name:match("^Door%d+") then
+            local n = tonumber(v.Name:match("%d+")) or 0
+            local d = { model = v, num = n, cd = oldCd[n] or 0 }
+            Doors[#Doors + 1] = d
+            DoorIndex[n] = d
+        end
+    end
+    table.sort(Doors, function(a, b) return a.num < b.num end)
+end
+refreshDoors()
+bind(workspace.ChildAdded:Connect(function(c)
+    if typeof(c.Name) == "string" and c.Name:match("^Door%d+") then task.defer(refreshDoors) end
+end))
+
+local function getChar()
+    local ch = pl.Character
+    if not ch then return nil, nil end
+    local hum = ch:FindFirstChildOfClass("Humanoid")
+    local hrp = ch:FindFirstChild("HumanoidRootPart")
+    if not hum or not hrp or hum.Health <= 0 then return nil, nil end
+    return ch, hrp
+end
+
+if CFG.Unanchor then
+    bind(RunService.Stepped:Connect(function()
+        local ch, hrp = getChar()
+        if hrp and hrp.Anchored then hrp.Anchored = false end
+    end))
+end
+
+local function knock(d)
+    local p = d.model:FindFirstChildWhichIsA("ProximityPrompt", true)
+    if not p then return "gone" end
+    local t = p.Parent
+    if not p.Enabled then return "busy" end
+    local ch, hrp = getChar()
+    if not hrp or not t then return "nochar" end
+
+    hrp.CFrame = t.CFrame * CFrame.new(0, CFG.KnockOffset, 0)
+    hrp.AssemblyLinearVelocity = Vector3.zero
+    task.wait(CFG.JumpDelay)
+    ch, hrp = getChar()
+    if not hrp or not p.Parent or not p.Enabled then return "busy" end
+
+    pendCd = nil
+    pendDoor = d
+    if typeof(fireproximityprompt) == "function" then
+        pcall(fireproximityprompt, p, 0)
+    else
+        pcall(function() p:InputHoldBegin(); task.wait(0.05); p:InputHoldEnd() end)
+    end
+    task.wait(0.45)
+
+    if p.Parent and not p.Enabled then
+        S_.knocks = S_.knocks + 1
+        d.cd = now() + CFG.DoorCooldown + math.random(0, CFG.CooldownJitter)
+        return "ok"
+    end
+    local dl = now() + 2.5
+    while now() < dl and not pendCd do task.wait(0.1) end
+    if pendCd then
+        d.cd = now() + pendCd + 1
+        return "cd"
+    end
+    d.cd = now() + CFG.RejectDelay
+    return "reject"
+end
+
+local function pickReady()
+    local ready = {}
+    local t = now()
+    for _, d in ipairs(Doors) do
+        local p = d.model.Parent and d.model:FindFirstChildWhichIsA("ProximityPrompt", true)
+        if p and p.Enabled and d.cd <= t then ready[#ready + 1] = d end
+    end
+    if #ready == 0 then return nil end
+    local i = 1
+    if CFG.Spread then
+        i = (S_.offset % #ready) + 1
+        S_.offset = (S_.offset + 1) % math.max(1, #Doors)
+    end
+    return ready[i]
+end
+
+local function nextCd()
+    local t, best = now(), math.huge
+    for _, d in ipairs(Doors) do
+        if d.cd > t and d.cd - t < best then best = d.cd - t end
+    end
+    return best
+end
+
+local function updHud()
+    local ready = 0
+    for _, d in ipairs(Doors) do
+        local p = d.model:FindFirstChildWhichIsA("ProximityPrompt", true)
+        if p and p.Enabled and d.cd <= now() then ready = ready + 1 end
+    end
+    StatL.Text = string.format("Ноков: %d | Дверей готово: %d/%d", S_.knocks, ready, #Doors)
+    local n = nextCd()
+    NextL.Text = "Ближайшее кд: " .. (n == math.huge and "—" or (n > 60 and string.format("%d мин", math.ceil(n / 60)) or string.format("%d сек", math.ceil(n))))
+end
+
+---------------------------------------------------------------- buttons
+FarmBtn.MouseButton1Click:Connect(function()
+    CFG.Farm = not CFG.Farm
+    FarmBtn.Text = CFG.Farm and "ФАРМ: ВКЛ" or "ФАРМ: ВЫКЛ"
+    FarmBtn.BackgroundColor3 = CFG.Farm and Color3.fromRGB(35, 150, 80) or Color3.fromRGB(110, 45, 45)
+    setStatus(CFG.Farm and "Работаю" or "Пауза")
+end)
+ModeBtn.MouseButton1Click:Connect(function()
+    CFG.Mode = (CFG.Mode == "Real") and "Random" or "Real"
+    ModeBtn.Text = CFG.Mode == "Real" and "РЕЖИМ: РЕАЛЬНОЕ КД" or "РЕЖИМ: РАНДОМ 1-3 МИН"
+end)
+RenderBtn.MouseButton1Click:Connect(function()
+    CFG.Render3DDisabled = not CFG.Render3DDisabled
+    Black.Visible = CFG.Render3DDisabled
+    pcall(function() RunService:Set3dRenderingEnabled(not CFG.Render3DDisabled) end)
+    RenderBtn.Text = CFG.Render3DDisabled and "3D: ВЫКЛ" or "3D: ВКЛ"
+end)
+
+local function unload()
+    alive = false
+    getgenv().TTC_Loaded = false
+    if getgenv().TTC_Token == TOKEN then getgenv().TTC_Token = nil end
+    for _, c in ipairs(Conn) do pcall(function() c:Disconnect() end) end
+    pcall(function() RunService:Set3dRenderingEnabled(true) end)
+    pcall(function() if setfpscap then setfpscap(0) end end)
+    Root:Destroy()
+end
+UnloadBtn.MouseButton1Click:Connect(unload)
+getgenv().TTC_Unload = unload
+getgenv().TTC_State = S_
+getgenv().TTC_CFG = CFG
+getgenv().TTC_Doors = function() return Doors end
+if CFG.Mode == "Random" then ModeBtn.Text = "РЕЖИМ: РАНДОМ 1-3 МИН" end
+
+---------------------------------------------------------------- afk
+if CFG.AntiAfk then
+    bind(pl.Idled:Connect(function()
+        pcall(function()
+            VirtualUser:Button2Down(Vector2.zero, workspace.CurrentCamera.CFrame)
+            task.wait(1)
+            VirtualUser:Button2Up(Vector2.zero, workspace.CurrentCamera.CFrame)
+        end)
+    end))
+end
+
+---------------------------------------------------------------- main
+S_.offset = math.random(0, math.max(1, #Doors))
+task.spawn(function()
+    local fpsTick = 0
+    while live() do
+        if not CFG.Farm then
+            setStatus("Пауза", Color3.fromRGB(255, 200, 90))
+            task.wait(0.4)
+        else
+            local ch, hrp = getChar()
+            if not ch then
+                setStatus("Жду персонажа...", Color3.fromRGB(255, 200, 90))
+                task.wait(0.5)
+            else
+                if os.clock() > fpsTick then
+                    pcall(function() if setfpscap then setfpscap(CFG.FpsCap) end end)
+                    fpsTick = os.clock() + 2
+                end
+                local d = pickReady()
+                if not d then
+                    updHud()
+                    local n = nextCd()
+                    setStatus("Все двери на кд", Color3.fromRGB(255, 200, 90))
+                    task.wait(math.min(2, math.max(0.2, n ~= math.huge and n or 1)))
+                else
+                    setStatus("Нок " .. d.model.Name, Color3.fromRGB(120, 255, 160))
+                    local r = knock(d)
+                    if CFG.Debug then print("TTC", d.model.Name, r, "ok=" .. S_.knocks, "cd=" .. math.floor(d.cd - now())) end
+                    if r == "ok" then
+                        setStatus("Открыл " .. d.model.Name, Color3.fromRGB(120, 255, 160))
+                        if CFG.Mode == "Random" then
+                            task.wait(math.random(CFG.RandomMin, CFG.RandomMax))
+                        else
+                            task.wait(0.1)
+                        end
+                    elseif r == "cd" then
+                        setStatus("КД " .. d.model.Name, Color3.fromRGB(255, 160, 90))
+                    elseif r == "reject" then
+                        S_.fails = S_.fails + 1
+                        d.cd = now() + CFG.RejectDelay + math.random(0, 3)
+                        setStatus("Дверь занята, жду", Color3.fromRGB(255, 160, 90))
+                        task.wait(0.6)
+                    elseif r == "busy" then
+                        d.cd = now() + 2
+                        task.wait(0.4)
+                    else
+                        task.wait(0.3)
+                    end
+                    updHud()
+                end
+            end
+        end
+    end
+end)
+setStatus("Работаю", Color3.fromRGB(120, 255, 160))
