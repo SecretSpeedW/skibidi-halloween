@@ -135,7 +135,20 @@ local function doTeleport(fn, secs)
     end
     local left = waitLeave(job, secs)
     if con then pcall(function() con:Disconnect() end) end
-    return left and not failed
+    return not failed
+end
+
+local function goPlaza(waitSec)
+    local job = game.JobId
+    local r = ReplicatedStorage:FindFirstChild("TeleportToPlaza")
+    if not r then
+        local okw, w = pcall(function() return ReplicatedStorage:WaitForChild("TeleportToPlaza", 4) end)
+        if okw then r = w end
+    end
+    if r and r:IsA("RemoteEvent") then
+        if pcall(function() r:FireServer() end) and waitLeave(job, waitSec or 12) then return true end
+    end
+    return doTeleport(function() TeleportService:Teleport(CFG.PlazaPlaceId, pl) end, 6)
 end
 
 local function joinPlaza()
@@ -148,58 +161,48 @@ local function joinPlaza()
     local inPlaza = (game.PlaceId == CFG.PlazaPlaceId)
     local priv = isPrivate()
 
-    if code then
-        if inPlaza and priv then
-            clearAttempts()
-            return false -- уже на приватной плазе
-        end
-        if not attemptAllowed(code) then
-            notify("Приватка", "Не зашли за 2 попытки, фармлю публичную")
-            return false
-        end
-        if getgenv().TTC_NoPrivate then
-            notify("Приватка", "Экзекутор не даёт зайти на приватку — зайди вручную")
-            return false
-        end
-        queueNext()
-        task.wait(0.6)
-        if inPlaza then
-            notify("Приватка", "Плаза публичная, захожу на приватную")
-            return doTeleport(function()
-                TeleportService:TeleportToPrivateServer(CFG.PlazaPlaceId, code, { pl })
-            end)
-        elseif priv then
-            notify("Приватка", "Уже на приватке, захожу в плазу")
-            local r = ReplicatedStorage:FindFirstChild("TeleportToPlaza")
-            if r and r:IsA("RemoteEvent") then
-                local job = game.JobId
-                pcall(function() r:FireServer() end)
-                return waitLeave(job, 5)
-            end
-            return doTeleport(function() TeleportService:Teleport(CFG.PlazaPlaceId, pl) end)
-        else
-            notify("Приватка", "Захожу на приватный сервер")
-            return doTeleport(function()
-                TeleportService:TeleportToPrivateServer(pid, code, { pl })
-            end)
-        end
+    -- уже на приватной плазе — работаем
+    if inPlaza and (not code or priv) then
+        if code then clearAttempts() end
+        return false
     end
 
-    if inPlaza then return false end
+    local canTry = code and not getgenv().TTC_NoPrivate and attemptAllowed(code)
+
     queueNext()
-    task.wait(0.6)
-    if game.PlaceId == CFG.LobbyPlaceId then
-        local r = ReplicatedStorage:FindFirstChild("TeleportToPlaza")
-        if r and r:IsA("RemoteEvent") then
-            local job = game.JobId
-            if pcall(function() r:FireServer() end) and waitLeave(job, 5) then return true end
+    task.wait(0.4)
+
+    -- в публичной плазе: пробуем приватную, не вышло — фармим эту
+    if inPlaza then
+        if not canTry then
+            if code and getgenv().TTC_NoPrivate then notify("Приватка", "Экзекутор не даёт приватку — фармлю публичную") end
+            return false
+        end
+        notify("Приватка", "Плаза публичная, захожу на приватную")
+        if doTeleport(function() TeleportService:TeleportToPrivateServer(CFG.PlazaPlaceId, code, { pl }) end, 4) then
+            return true
+        end
+        notify("Приватка", "Не вышло, остаюсь в публичной")
+        return false
+    end
+
+    -- не в плазе: сначала приватка (если можно), потом плаза
+    if canTry and not priv then
+        notify("Приватка", "Захожу на приватный сервер")
+        if doTeleport(function() TeleportService:TeleportToPrivateServer(pid, code, { pl }) end, 4) then
+            return true
         end
     end
-    return doTeleport(function() TeleportService:Teleport(CFG.PlazaPlaceId, pl) end)
+    if priv then notify("Приватка", "На приватке, захожу в плазу") end
+    return goPlaza(20)
 end
+local job0 = game.JobId
 if joinPlaza() then
-    getgenv().TTC_Loaded = false
-    return
+    task.wait(3)
+    if game.JobId ~= job0 then
+        getgenv().TTC_Loaded = false
+        return
+    end
 end
 
 pcall(function() if setfpscap then setfpscap(CFG.FpsCap) end end)
